@@ -129,3 +129,4 @@ resource "azurerm_role_assignment" "acr_pull" {
   principal_id         = module.aks_cluster.kubelet_identity_object_id
   skip_service_principal_aad_check = true
 }
+    

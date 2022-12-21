@@ -1,0 +1,33 @@
+name: Run for a PR
+
+on:  
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'backend-app/*'
+      - 'frontend-app/*'
+      - '!terraform/*'
+
+
+jobs:
+  build:
+    name: PR Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      - name: Build Backend for PR
+        id: build-backend
+        run: |
+          cd backend-app
+          docker build --build-arg NODE_ENV=production .
+          
+      - name: Build Frontend for PR
+        id: build-frontend
+        run: |
+          cd frontend-app
+          docker build --build-arg NODE_ENV=production .  

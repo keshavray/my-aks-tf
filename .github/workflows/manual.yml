@@ -15,11 +15,14 @@ jobs:
       - name: Hello World
         run: |    
            echo "Hello Keshav"
+      - name: revision
+        run: |
+           run_number=${{github.run_number}}+1
+           echo $run_number
       - name: Create tag
         uses: actions/github-script@v5
         with:
           script: |
-            run_number=${{github.run_number}}+1
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,

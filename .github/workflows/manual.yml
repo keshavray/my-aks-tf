@@ -19,9 +19,10 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
+            run_number=${{github.run_number}}+1
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{github.run_number}}',
+              ref: 'refs/tags/${{run_number}}',
               sha: context.sha
             })

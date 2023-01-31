@@ -15,17 +15,17 @@ jobs:
       - name: Hello World
         run: |    
            echo "Hello Keshav"
-#       - name: revision
-#         run: |
-#            run_number=${{github.run_number}}+1
-#            echo $run_number
-      - name: Create tag
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{github.run_number+1}}',
-              sha: context.sha
-            })
+      - name: revision
+        run: |
+           run_number=${{github.run_number}}+1
+           echo $run_number
+#       - name: Create tag
+#         uses: actions/github-script@v5
+#         with:
+#           script: |
+#             github.rest.git.createRef({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               ref: 'refs/tags/${{github.run_number+1}}',
+#               sha: context.sha
+#             })

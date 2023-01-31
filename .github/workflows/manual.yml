@@ -17,7 +17,7 @@ jobs:
            echo "Hello Keshav"
       - name: revision
         run: |
-           run_number=${{github.run_number}}+1
+           run_number=$(${{github.run_number}}+1)
            echo $run_number
 #       - name: Create tag
 #         uses: actions/github-script@v5

@@ -18,7 +18,7 @@ jobs:
       - name: revision
         id: get-latest-revision
         run: |
-          echo "latest-revision={{github.run_number}}" >> $GITHUB_OUTPUT 
+          echo "latest-revision=${{github.run_number}}" >> $GITHUB_OUTPUT 
       - name: Create tag with Latest Revision
         uses: actions/github-script@v5
         with:

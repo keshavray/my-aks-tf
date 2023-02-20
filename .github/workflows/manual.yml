@@ -1,6 +1,8 @@
 name: Deploy Backend Production to AWS ECS
 
-on: [workflow_dispatch]
+on:
+  release:
+    types: [published]
 
 jobs:
   deploy:
@@ -19,13 +21,13 @@ jobs:
         id: get-latest-revision
         run: |
           echo "latest-revision=${{github.run_number}}" >> $GITHUB_OUTPUT 
-      - name: Create tag with Latest Revision
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{steps.get-latest-revision.outputs.latest-revision}}-frontend',
-              sha: context.sha
-            })   
+#       - name: Create tag with Latest Revision
+#         uses: actions/github-script@v5
+#         with:
+#           script: |
+#             github.rest.git.createRef({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               ref: 'refs/tags/${{steps.get-latest-revision.outputs.latest-revision}}-frontend',
+#               sha: context.sha
+#             })   

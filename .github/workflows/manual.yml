@@ -1,34 +1,31 @@
-name: Create Tag
-on:
-  push:
-    branches:
-      - main
+name: Deploy Backend Production to AWS ECS
+
+on: [workflow_dispatch]
+
 jobs:
-  tag:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+    environment: test-env
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Get latest tag
-        id: get_latest_tag
-        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0)
-      - name: Increment tag version
-        id: increment_tag_version
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Hello World
+        run: |    
+           echo "Hello Keshav"
+      - name: revision
+        id: get-latest-revision
         run: |
-          echo "Latest tag: ${{ steps.get_latest_tag.outputs.tag }}"
-          tag_version=$(echo "${{ steps.get_latest_tag.outputs.tag }}" | sed -E 's/v([0-9]+)\.([0-9]+)\.([0-9]+)/\1.\2.\3/')
-          new_tag_version=$(echo "${tag_version}" | awk -F. '{printf "%d.%d.%d", $1, $2, $3 + 1}')
-          echo "New tag version: ${new_tag_version}"
-          echo "::set-output name=new_tag_version::${new_tag_version}"
-      - name: Create tag
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git fetch --tags
-          if git rev-parse --verify "v${{ steps.increment_tag_version.outputs.new_tag_version }}" >/dev/null 2>&1; then
-            echo "Tag v${{ steps.increment_tag_version.outputs.new_tag_version }} already exists"
-          else
-            echo "Creating tag v${{ steps.increment_tag_version.outputs.new_tag_version }}"
-            git tag -a "v${{ steps.increment_tag_version.outputs.new_tag_version }}" -m "Version ${{ steps.increment_tag_version.outputs.new_tag_version }}"
-            git push origin "v${{ steps.increment_tag_version.outputs.new_tag_version }}"
-          fi
+          echo "latest-revision=${{github.run_number}}" >> $GITHUB_OUTPUT 
+      - name: Create tag with Latest Revision
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{steps.get-latest-revision.outputs.latest-revision}}-frontend',
+              sha: context.sha
+            })   

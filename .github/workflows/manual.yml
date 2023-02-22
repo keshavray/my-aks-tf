@@ -15,10 +15,10 @@ jobs:
       - name: Hello World
         run: |    
            echo "Hello Keshav"
-      - name: revision
-        id: get-latest-revision
+      - name: Get Github Run Number
+        id: get-github-run-number
         run: |
-          echo "latest-revision=${{github.run_number}}" >> $GITHUB_OUTPUT 
+          echo "github-run-number=${{github.run_number}}" >> $GITHUB_OUTPUT 
       - name: Create tag with Latest Revision
         uses: actions/github-script@v5
         with:
@@ -26,6 +26,6 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{steps.get-latest-revision.outputs.latest-revision}}-frontend',
+              ref: 'refs/tags/${{steps.get-github-run-number.outputs.github-run-number}}-neem-software',
               sha: context.sha
             })   

@@ -1,0 +1,19 @@
+name: Workflow to Run on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Hello World
+        run: |    
+           echo "Hello Keshav"

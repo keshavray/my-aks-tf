@@ -1,31 +1,20 @@
-name: terraform-enterprise CI flow
-
+name: Bump version
 on:
   push:
-    branches: 
-     - 'main'
-      
-  pull_request:
     branches:
-      - 'main'
-     
-
+      - main
 jobs:
-  ci:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checking out...
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
-    - id: terraform-enterprise
-      name: taggingtry
-      uses: trustlogix/tlx-cicd@v42
-      with:
-        project-name: 'terraform-enterprise'
-        project-type: 'infra'
-        project-steps: all
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
